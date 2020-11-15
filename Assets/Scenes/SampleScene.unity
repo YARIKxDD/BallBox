@@ -846,7 +846,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 505047191}
-  levelManager: {fileID: 649581746}
+  ballAndTargetManager: {fileID: 649581746}
   leftWall: {fileID: 862108718}
   rightWall: {fileID: 1822156894}
   speedAtLevel1: 0.5
@@ -1139,7 +1139,7 @@ MonoBehaviour:
   uiManager: {fileID: 1062612713}
   aiManager: {fileID: 358793103}
   inputManager: {fileID: 1864256584}
-  levelManager: {fileID: 649581746}
+  ballAndTargetManager: {fileID: 649581746}
 --- !u!4 &505047192
 Transform:
   m_ObjectHideFlags: 0
@@ -1295,7 +1295,7 @@ GameObject:
   - component: {fileID: 649581747}
   - component: {fileID: 649581746}
   m_Layer: 0
-  m_Name: Level_Manager
+  m_Name: BallAndTarget_Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1816,8 +1816,8 @@ Camera:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -2705,7 +2705,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18e8b37e8c074e442bbc35977ca705af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelManager: {fileID: 649581746}
+  ballAndTargetManager: {fileID: 649581746}
   cam: {fileID: 963194227}
   mouseCatchLayerMask:
     serializedVersion: 2

@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UIManager uiManager;
     [SerializeField] private AIManager aiManager;
     [SerializeField] private InputManager inputManager;
-    [SerializeField] private LevelManager levelManager;
+    [SerializeField] private BallAndTargetManager ballAndTargetManager;
 
     private GameState _currentAppState;
     private GameState CurrentAppState
@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
         uiManager.NextLevelClicked += OnNextLevelClicked;
         uiManager.ExitClicked += OnExitClicked;
 
-        levelManager.LevelComplited += OnLevelComplited;
+        ballAndTargetManager.LevelComplited += OnLevelComplited;
     }
 
     private void OnDisable()
@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
         uiManager.NextLevelClicked -= OnNextLevelClicked;
         uiManager.ExitClicked -= OnExitClicked;
 
-        levelManager.LevelComplited -= OnLevelComplited;
+        ballAndTargetManager.LevelComplited -= OnLevelComplited;
     }
 
     private void Start()
@@ -73,8 +73,8 @@ public class GameManager : MonoBehaviour
 
     private void OnStartClicked()
     {
-        levelManager.DestroyLevel();
-        levelManager.BuildLevel();
+        ballAndTargetManager.DestroyLevel();
+        ballAndTargetManager.BuildLevel();
         CurrentAppState = GameState.Game;
     }
 
@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviour
     private void OnLevelComplited()
     {
         PlayerPrefs.SetInt(SAVEKEY_LEVEL, CurrentLevelNumber);
-        levelManager.DestroyLevel();
+        ballAndTargetManager.DestroyLevel();
         CurrentLevelNumber++;
         CurrentAppState = GameState.Start;
     }

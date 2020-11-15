@@ -5,7 +5,7 @@ using UnityEngine;
 public class AIManager : MonoBehaviour
 {
     [SerializeField] private GameManager gameManager;
-    [SerializeField] private LevelManager levelManager;
+    [SerializeField] private BallAndTargetManager ballAndTargetManager;
     [SerializeField] private Transform leftWall;
     [SerializeField] private Transform rightWall;
     [SerializeField] private float speedAtLevel1;
@@ -16,14 +16,14 @@ public class AIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        levelManager.BallCreated += OnBallCreated;
-        levelManager.BallDestroyed += OnBallDestroyed;
+        ballAndTargetManager.BallCreated += OnBallCreated;
+        ballAndTargetManager.BallDestroyed += OnBallDestroyed;
     }
 
     private void OnDisable()
     {
-        levelManager.BallCreated -= OnBallCreated;
-        levelManager.BallDestroyed -= OnBallDestroyed;
+        ballAndTargetManager.BallCreated -= OnBallCreated;
+        ballAndTargetManager.BallDestroyed -= OnBallDestroyed;
     }
 
     private void FixedUpdate()

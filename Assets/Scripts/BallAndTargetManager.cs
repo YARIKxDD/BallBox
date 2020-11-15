@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelManager : MonoBehaviour
+public class BallAndTargetManager : MonoBehaviour
 {
     public Action<Transform> BallCreated;
     public Action BallPulled;

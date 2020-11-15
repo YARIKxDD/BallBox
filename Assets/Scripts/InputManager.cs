@@ -5,7 +5,7 @@ public class InputManager : MonoBehaviour
 {
     public Action<Vector3> PullNow;
 
-    [SerializeField] private LevelManager levelManager;
+    [SerializeField] private BallAndTargetManager ballAndTargetManager;
     [SerializeField] private Camera cam;
     [SerializeField] private LayerMask mouseCatchLayerMask;
     [SerializeField] private LayerMask UILayerMask;
@@ -38,14 +38,14 @@ public class InputManager : MonoBehaviour
 
     private void OnEnable()
     {
-        levelManager.BallCreated += OnBallCreated;
-        levelManager.BallPulled += OnBallPulled;
+        ballAndTargetManager.BallCreated += OnBallCreated;
+        ballAndTargetManager.BallPulled += OnBallPulled;
     }
 
     private void OnDisable()
     {
-        levelManager.BallCreated -= OnBallCreated;
-        levelManager.BallPulled -= OnBallPulled;
+        ballAndTargetManager.BallCreated -= OnBallCreated;
+        ballAndTargetManager.BallPulled -= OnBallPulled;
     }
 
     private void Update()

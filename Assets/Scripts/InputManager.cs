@@ -8,7 +8,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] private BallAndTargetManager ballAndTargetManager;
     [SerializeField] private Camera cam;
     [SerializeField] private LayerMask mouseCatchLayerMask;
-    [SerializeField] private LayerMask UILayerMask;
+    [SerializeField] private float minDebugOffset;
     [SerializeField] private float minMagnitude;
     [SerializeField] private float maxMagnitude;
     [SerializeField] private float minZOffsetToPull;
@@ -19,7 +19,6 @@ public class InputManager : MonoBehaviour
 
     bool canStartTrack;
     bool isTrackingNow;
-    Vector3 currentMouseWorldPos;
 
     private Vector3 startPosition;
     private Vector3 currentPosition;
@@ -28,6 +27,7 @@ public class InputManager : MonoBehaviour
         get
         {
             Vector3 offset = startPosition - currentPosition;
+            offset.y = 0;
 
             if (offset.magnitude > maxMagnitude)
                 offset = offset.normalized * maxMagnitude;
@@ -50,26 +50,47 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
+        if (Time.timeScale == 0) 
+            return;
+
         if (Input.GetMouseButtonDown(0) && canStartTrack)
         {
-            if (TryUpdateMouseWorldPosition())
-            {
-                isTrackingNow = true;
-                MouseStarted(currentMouseWorldPos);
-            }
-        } //нажали на экран - если не над UI - начинаем трекать
+            UpdateMouseWorldPosition();
+            startPosition = currentPosition;
+            isTrackingNow = true;
+            player.position = arrowWidget.transform.position + playerDefaultOffset;
+        }
         else if (Input.GetMouseButton(0) && isTrackingNow)
         {
-            if (TryUpdateMouseWorldPosition())
+            UpdateMouseWorldPosition();
+
+            Vector3 offsetForPlayer = Offset;
+            if (offsetForPlayer.magnitude < minDebugOffset)
             {
-                MouseUpdated(currentMouseWorldPos);
+                offsetForPlayer = -playerDefaultOffset;
             }
-        } //держим и не над UI - апдейтим
+            else if (offsetForPlayer.magnitude < minMagnitude)
+            {
+                offsetForPlayer = offsetForPlayer.normalized * minMagnitude;
+            }            
+            player.position = arrowWidget.transform.position - offsetForPlayer;
+
+            arrowWidget.Set(Offset, IsOffsetValid());
+            if (!arrowWidget.gameObject.activeSelf)
+            {
+                arrowWidget.gameObject.SetActive(true);
+            }
+        }
         else if (Input.GetMouseButtonUp(0))
         {
             if (isTrackingNow)
             {
-                MouseStopped();
+                player.position = arrowWidget.transform.position + playerDefaultOffset;
+                arrowWidget.gameObject.SetActive(false);
+                if (IsOffsetValid() && PullNow != null)
+                {
+                    PullNow(Offset);
+                }
             }
             isTrackingNow = false;
         }
@@ -85,38 +106,13 @@ public class InputManager : MonoBehaviour
         canStartTrack = false;
     }
 
-    private void MouseStarted(Vector3 position)
+    private void UpdateMouseWorldPosition()
     {
-        startPosition = position;
-        player.position = arrowWidget.transform.position;
-    }
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        RaycastHit raycastHit;
+        Physics.Raycast(ray, out raycastHit, 200, mouseCatchLayerMask);
 
-    private void MouseUpdated(Vector3 position)
-    {
-        currentPosition = position;
-        player.position = arrowWidget.transform.position - Offset;
-
-        arrowWidget.Set(Offset, IsOffsetValid());
-        if (!arrowWidget.gameObject.activeSelf)
-        {
-            arrowWidget.gameObject.SetActive(true);
-        }
-    }
-
-    private void MouseStopped()
-    {
-        player.position = arrowWidget.transform.position + playerDefaultOffset;
-        arrowWidget.gameObject.SetActive(false);
-
-        if (!IsOffsetValid())
-        {
-            return;
-        }
-
-        if (PullNow != null)
-        {
-            PullNow(Offset);
-        }
+        currentPosition = raycastHit.point;
     }
 
     private bool IsOffsetValid()
@@ -127,21 +123,6 @@ public class InputManager : MonoBehaviour
         if (Offset.z < minZOffsetToPull)
             return false;
 
-        return true;
-    }
-
-    private bool TryUpdateMouseWorldPosition()
-    {
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        RaycastHit raycastHit;
-        Physics.Raycast(ray, out raycastHit, 200, mouseCatchLayerMask | UILayerMask);
-
-        if ((UILayerMask & (1 << raycastHit.transform.gameObject.layer)) != 0)
-        {
-            return false;
-        }//курсор над UI
-
-        currentMouseWorldPos = raycastHit.point;
         return true;
     }
 

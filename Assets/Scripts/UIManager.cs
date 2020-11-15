@@ -8,7 +8,6 @@ public class UIManager : MonoBehaviour
     public Action StartClicked;
     public Action PauseClicked;
     public Action ContinueClicked;
-    public Action NextLevelClicked;
     public Action ExitClicked;
 
     [SerializeField] private GameManager gameManager;
@@ -19,18 +18,17 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject backgroundPause;
     [SerializeField] private GameObject startButton;
     [SerializeField] private GameObject continueButton;
-    [SerializeField] private GameObject nextLevelButton;
 
     [SerializeField] private List<Text> levelNumbers = new List<Text>();
 
     private void OnEnable()
     {
-        gameManager.CurrentAppStateChanged += OnCurrentAppStateChanged;
+        gameManager.CurrentGameStateChanged += OnCurrentAppStateChanged;
     }
 
     private void OnDisable()
     {
-        gameManager.CurrentAppStateChanged -= OnCurrentAppStateChanged;
+        gameManager.CurrentGameStateChanged -= OnCurrentAppStateChanged;
     }
 
     private void OnCurrentAppStateChanged(GameState appState)
@@ -42,7 +40,6 @@ public class UIManager : MonoBehaviour
                 continueButton.SetActive(false);
                 backgroundStartEnd.SetActive(true);
                 backgroundPause.SetActive(true);
-                nextLevelButton.SetActive(false);
                 foreach(Text text in levelNumbers)
                 {
                     text.text = gameManager.CurrentLevelNumber.ToString();
@@ -50,10 +47,6 @@ public class UIManager : MonoBehaviour
                 break;
 
             case GameState.Pause:
-                break;
-
-            case GameState.GameOver:
-                nextLevelButton.SetActive(true);
                 break;
         }
 
@@ -87,14 +80,6 @@ public class UIManager : MonoBehaviour
         if (ContinueClicked != null)
         {
             ContinueClicked();
-        }
-    }
-
-    public void ClickNextLevelButton()
-    {
-        if (NextLevelClicked != null)
-        {
-            NextLevelClicked();
         }
     }
 

@@ -5,7 +5,7 @@ public class GameManager : MonoBehaviour
 {
     const string SAVEKEY_LEVEL = "Last finished level";
 
-    public Action<GameState> CurrentAppStateChanged;
+    public Action<GameState> CurrentGameStateChanged;
 
     [SerializeField] private UIManager uiManager;
     [SerializeField] private AIManager aiManager;
@@ -23,9 +23,9 @@ public class GameManager : MonoBehaviour
         {
             _currentAppState = value;
 
-            if (CurrentAppStateChanged != null)
+            if (CurrentGameStateChanged != null)
             {
-                CurrentAppStateChanged(_currentAppState);
+                CurrentGameStateChanged(_currentAppState);
             }
         }
     }
@@ -48,7 +48,6 @@ public class GameManager : MonoBehaviour
         uiManager.StartClicked += OnStartClicked;
         uiManager.PauseClicked += OnPauseClicked;
         uiManager.ContinueClicked += OnContinueClicked;
-        uiManager.NextLevelClicked += OnNextLevelClicked;
         uiManager.ExitClicked += OnExitClicked;
 
         ballAndTargetManager.LevelComplited += OnLevelComplited;
@@ -59,7 +58,6 @@ public class GameManager : MonoBehaviour
         uiManager.StartClicked -= OnStartClicked;
         uiManager.PauseClicked -= OnPauseClicked;
         uiManager.ContinueClicked -= OnContinueClicked;
-        uiManager.NextLevelClicked -= OnNextLevelClicked;
         uiManager.ExitClicked -= OnExitClicked;
 
         ballAndTargetManager.LevelComplited -= OnLevelComplited;
@@ -80,17 +78,14 @@ public class GameManager : MonoBehaviour
 
     private void OnPauseClicked()
     {
+        Time.timeScale = 0;
         CurrentAppState = GameState.Pause;
     }
 
     private void OnContinueClicked()
     {
-        CurrentAppState = GameState.Start;
-    }
-
-    private void OnNextLevelClicked()
-    {
-        //
+        Time.timeScale = 1;
+        CurrentAppState = GameState.Game;
     }
 
     private void OnExitClicked()

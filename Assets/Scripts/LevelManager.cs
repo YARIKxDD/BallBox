@@ -10,7 +10,7 @@ public class LevelManager : MonoBehaviour
     public Action LevelComplited;
 
     [SerializeField] private AIManager aiManager;
-    [SerializeField] private ChargeManager chargeManager;
+    [SerializeField] private InputManager inputManager;
     [SerializeField] private GameObject levelPrefab;
     [SerializeField] private GameObject ballPrefab;
     [SerializeField] private float ballSpeedK;
@@ -23,12 +23,12 @@ public class LevelManager : MonoBehaviour
 
     private void OnEnable()
     {
-        chargeManager.Pulled += PullBall;
+        inputManager.PullNow += PullBall;
     }
 
     private void OnDisable()
     {
-        chargeManager.Pulled -= PullBall;
+        inputManager.PullNow -= PullBall;
     }
 
     private void Update()
@@ -95,7 +95,7 @@ public class LevelManager : MonoBehaviour
         ballStartPoint = levelRef.BallStartPoint;
         targets.AddRange(levelRef.Targets);
         aiManager.FindNewAgent(levelRef.OpponentAgent);
-        chargeManager.SetRef(levelRef.Player, levelRef.ArrowWidget);
+        inputManager.SetFromRef(levelRef.Player, levelRef.ArrowWidget);
 
         CreateBall();
     }
